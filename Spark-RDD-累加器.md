@@ -23,9 +23,11 @@ Accumulators.register(this)
 Executor端反序列化得到Accumulator
 反序列化是在调用ResultTask的runTask方式时候做的操作：
 
-// 会反序列化出来RDD和自己定义的function
+```// 会反序列化出来RDD和自己定义的function
 val (rdd, func) = ser.deserialize[(RDD[T], (TaskContext, Iterator[T]) => U)](
    ByteBuffer.wrap(taskBinary.value), Thread.currentThread.getContextClassLoader)
+```
+
 
 在反序列化的过程中，会调用Accumulable中的readObject方法：
 
