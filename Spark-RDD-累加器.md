@@ -31,7 +31,7 @@ val (rdd, func) = ser.deserialize[(RDD[T], (TaskContext, Iterator[T]) => U)](
 
 在反序列化的过程中，会调用Accumulable中的readObject方法：
 
-  private def readObject(in: ObjectInputStream): Unit = Utils.tryOrIOException {
+  ```private def readObject(in: ObjectInputStream): Unit = Utils.tryOrIOException {
     in.defaultReadObject()
     // value的初始值为zero；该值是会被序列化的
     value_ = zero
@@ -49,6 +49,8 @@ val (rdd, func) = ser.deserialize[(RDD[T], (TaskContext, Iterator[T]) => U)](
       taskContext.registerAccumulator(this)
     }
   }
+```
+
 
 注意 
 Accumulable.scala中的value_，是不会被序列化的，@transient关键词修饰了 
