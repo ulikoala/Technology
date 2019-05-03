@@ -45,25 +45,7 @@ val (rdd, func) = ser.deserialize[(RDD[T], (TaskContext, Iterator[T]) => U)](
       taskContext.registerAccumulator(this)
     }
   }
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
+
 注意 
 Accumulable.scala中的value_，是不会被序列化的，@transient关键词修饰了 
 @volatile @transient private var value_ : R = initialValue // Current value on master
@@ -75,11 +57,7 @@ def += (term: T) { value_ = param.addAccumulator(value_, term) }
 def add(term: T) { value_ = param.addAccumulator(value_, term) }
 def ++= (term: R) { value_ = param.addInPlace(value_, term)}
 …
-1
-2
-3
-4
-5
+
 根据不同的累加器参数，有不同实现的AccumulableParam（在Accumulator.scala中）：
 
 trait AccumulableParam[R, T] extends Serializable {
@@ -88,13 +66,7 @@ trait AccumulableParam[R, T] extends Serializable {
   def addInPlace(r1: R, r2: R): R
   def zero(initialValue: R): R
 }
-1
-2
-3
-4
-5
-6
-7
+
 不同的实现如下图所示： 
 
 
@@ -104,11 +76,7 @@ trait AccumulableParam[R, T] extends Serializable {
     def addInPlace(t1: Int, t2: Int): Int = t1 + t2
     def zero(initialValue: Int): Int = 0
   }
-1
-2
-3
-4
-5
+
 我们发现IntAccumulatorParam实现的是trait AccumulatorParam[T]：
 
 trait AccumulatorParam[T] extends AccumulableParam[T, T] {
@@ -116,12 +84,7 @@ trait AccumulatorParam[T] extends AccumulableParam[T, T] {
     addInPlace(t1, t2)
   }
 }
-1
-2
-3
-4
-5
-6
+
 在各个节点上的累加操作完成之后，就会紧跟着返回更新之后的Accumulators的value_值
 
 聚合操作
@@ -130,10 +93,7 @@ trait AccumulatorParam[T] extends AccumulableParam[T, T] {
 // 返回累加器，并运行task
 // 调用TaskContextImpl的collectAccumulators，返回值的类型为一个Map
 (runTask(context), context.collectAccumulators())
-1
-2
-3
-4
+
 在Executor端已经完成了一系列操作，需要将它们的值返回到Driver端进行聚合汇总，整个顺序如图累加器执行流程：
 
 
