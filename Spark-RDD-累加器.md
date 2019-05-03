@@ -14,9 +14,11 @@ Executor端接收到Task之后会进行反序列化操作，反序列化得到RD
 Driver端初始化
 Driver端主要经过以下步骤，完成初始化操作：
 
-val accum = sparkContext.accumulator(0, “AccumulatorTest”)
+```val accum = sparkContext.accumulator(0, “AccumulatorTest”)
 val acc = new Accumulator(initialValue, param, Some(name))
 Accumulators.register(this)
+```
+
 
 Executor端反序列化得到Accumulator
 反序列化是在调用ResultTask的runTask方式时候做的操作：
